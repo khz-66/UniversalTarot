@@ -7,6 +7,6 @@ Mit UniversalTarot lassen sich bis zu fünf Karten aus dem Rider-Waite Tarot ode
 # ​Funktionen im Überblick
 **​Schütteln & Ziehen:** Durch Schütteln des Geräts werden nacheinander bis zu fünf Karten gezogen und nebeneinander angeordnet.  
 
-**​Eigenes Deck & Deutungen:** Unterstützung für bis zu 100 eigene PNG-Karten, eine eigene Rückseite (back.png) sowie eine Textdatei, in die eigene Deutungen eingetragen und dargestellt werden können.
+**​Eigenes Deck & Deutungen:** Unterstützung für bis zu 100 eigene Karten, eine eigene Rückseite sowie eine Textdatei, in die eigene Deutungen eingetragen und dargestellt werden können.
 
 **​Speicherung der letzten Ziehung:** Gezogene Karten, verbleibende Karten und Anzeigezustände bleiben beim Schließen der App erhalten.  
