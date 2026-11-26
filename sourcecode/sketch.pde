@@ -203,9 +203,7 @@ void setup() {
   // 5. Logik-Initialisierungen (Zustand & Sensoren)
   gezogeneKarten = new int[maxKarten];
   verfuegbareKarten = new ArrayList<Integer>();
-  for (int i = 1; i < bilder.length; i++) {
-    verfuegbareKarten.add(i);
-  }
+  rebuildAvailableCards();
 
   try {
     loadState();
@@ -223,6 +221,15 @@ void setup() {
     sensorManager.registerListener(sensorListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
   } catch (Exception e) {
     println("Fehler bei Sensor-Initialisierung: " + e.getMessage());
+  }
+}
+
+void rebuildAvailableCards() {
+  verfuegbareKarten.clear();
+  for (int i = 1; i < bilder.length; i++) {
+    if (bilder[i] != null) {
+      verfuegbareKarten.add(i);
+    }
   }
 }
 
@@ -523,10 +530,7 @@ void touchMoved() {
         if (deltaX < -swipeThreshold) {
           bildAngezeigt = false;
           anzahlGezogeneKarten = 0;
-          verfuegbareKarten.clear();
-          for (int i = 1; i < bilder.length; i++) {
-            verfuegbareKarten.add(i);
-          }
+          rebuildAvailableCards();
           selectedCardIndex = -1;
           showNames = false;
           try {
@@ -573,17 +577,22 @@ SensorEventListener sensorListener = new SensorEventListener() {
           shakeDetected = true;
           if (anzahlGezogeneKarten >= maxKarten) {
             anzahlGezogeneKarten = 0;
-            verfuegbareKarten.clear();
-            for (int i = 1; i < bilder.length; i++) {
-              verfuegbareKarten.add(i);
-            }
+            rebuildAvailableCards();
             selectedCardIndex = -1;
             showNames = false;
           }
-          if (!verfuegbareKarten.isEmpty()) {
+
+          int gezogeneNr = 0;
+          PImage gewaehltesBild = null;
+          while (!verfuegbareKarten.isEmpty() && gewaehltesBild == null) {
             int index = int(random(verfuegbareKarten.size()));
-            gezogeneKarten[anzahlGezogeneKarten] = verfuegbareKarten.get(index);
+            gezogeneNr = verfuegbareKarten.get(index);
             verfuegbareKarten.remove(index);
+            gewaehltesBild = bilder[gezogeneNr];
+          }
+
+          if (gewaehltesBild != null) {
+            gezogeneKarten[anzahlGezogeneKarten] = gezogeneNr;
             anzahlGezogeneKarten++;
             bildAngezeigt = true;
             selectedCardIndex = -1;
@@ -633,7 +642,7 @@ void loadState() {
       anzahlGezogeneKarten = Integer.valueOf(state[1]);
       showNames = Boolean.valueOf(state[2]);
 
-      // 1. Obergrenze für den aktuellen App-Start ermitteln
+      // 1. Obergrenze f����r den aktuellen App-Start ermitteln
       int maxVerfuegbareKarte = 0;
       if (externerOrdnerLeer) {
         maxVerfuegbareKarte = bilder.length - 1; // 100
